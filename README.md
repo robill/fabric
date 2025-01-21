@@ -126,22 +126,20 @@ To install Fabric, you can use the latest release binaries or install it from th
 
 ### Get Latest Release Binaries
 
-```bash
-# Windows:
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe > fabric.exe && fabric.exe --version
+#### Windows:
+`https://github.com/danielmiessler/fabric/releases/latest/download/fabric-windows-amd64.exe`
 
-# MacOS (arm64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version
+#### MacOS (arm64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-arm64 > fabric && chmod +x fabric && ./fabric --version`
 
-# MacOS (amd64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version
+#### MacOS (amd64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-darwin-amd64 > fabric && chmod +x fabric && ./fabric --version`
 
-# Linux (amd64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version
+#### Linux (amd64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-amd64 > fabric && chmod +x fabric && ./fabric --version`
 
-# Linux (arm64):
-curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 > fabric && chmod +x fabric && ./fabric --version
-```
+#### Linux (arm64):
+`curl -L https://github.com/danielmiessler/fabric/releases/latest/download/fabric-linux-arm64 > fabric && chmod +x fabric && ./fabric --version`
 
 ### From Source
 
@@ -208,6 +206,67 @@ done
 yt() {
     local video_link="$1"
     fabric -y "$video_link" --transcript
+}
+```
+
+You can add the below code for the equivalent aliases inside PowerShell by running `notepad $PROFILE` inside a PowerShell window:
+
+```powershell
+# Path to the patterns directory
+$patternsPath = Join-Path $HOME ".config/fabric/patterns"
+foreach ($patternDir in Get-ChildItem -Path $patternsPath -Directory) {
+    $patternName = $patternDir.Name
+
+    # Dynamically define a function for each pattern
+    $functionDefinition = @"
+function $patternName {
+    [CmdletBinding()]
+    param(
+        [Parameter(ValueFromPipeline = `$true)]
+        [string] `$InputObject,
+
+        [Parameter(ValueFromRemainingArguments = `$true)]
+        [String[]] `$patternArgs
+    )
+
+    begin {
+        # Initialize an array to collect pipeline input
+        `$collector = @()
+    }
+
+    process {
+        # Collect pipeline input objects
+        if (`$InputObject) {
+            `$collector += `$InputObject
+        }
+    }
+
+    end {
+        # Join all pipeline input into a single string, separated by newlines
+        `$pipelineContent = `$collector -join "`n"
+
+        # If there's pipeline input, include it in the call to fabric
+        if (`$pipelineContent) {
+            `$pipelineContent | fabric --pattern $patternName `$patternArgs
+        } else {
+            # No pipeline input; just call fabric with the additional args
+            fabric --pattern $patternName `$patternArgs
+        }
+    }
+}
+"@
+    # Add the function to the current session
+    Invoke-Expression $functionDefinition
+}
+
+# Define the 'yt' function as well
+function yt {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$videoLink
+    )
+    fabric -y $videoLink --transcript
 }
 ```
 
@@ -384,7 +443,15 @@ pbpaste | fabric --stream --pattern analyze_claims
 fabric -y "https://youtube.com/watch?v=uXs-zPc63kM" --stream --pattern extract_wisdom
 ```
 
-4. Create patterns- you must create a .md file with the pattern and save it to ~/.config/fabric/patterns/[yourpatternname].
+
+4. Create patterns- you must create a .md file with the pattern and save it to `~/.config/fabric/patterns/[yourpatternname]`.
+
+
+5. Run a `analyze_claims` pattern on a website. Fabric uses Jina AI to scrape the URL into markdown format before sending it to the model.
+
+```bash
+fabric -u https://github.com/danielmiessler/fabric/ -p analyze_claims
+```
 
 ## Just use the Patterns
 
@@ -415,7 +482,6 @@ When you're ready to use them, copy them into:
 
 You can then use them like any other Patterns, but they won't be public unless you explicitly submit them as Pull Requests to the Fabric project. So don't worry—they're private to you.
 
-This feature works with all openai and ollama models but does NOT work with claude. You can specify your model with the -m flag
 
 ## Helper Apps
 
