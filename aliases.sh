@@ -10,4 +10,4 @@ for pattern_file in $HOME/.config/fabric/patterns/*; do
     eval "$alias_command"
 done
 
-alias cbpaste="echo $(powershell.exe Get-Clipboard)"
+alias cbpaste='echo $(powershell.exe Get-Clipboard)'
