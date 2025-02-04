@@ -6,7 +6,7 @@ Take a deep breath and think step by step about how to best accomplish this goal
 # OUTPUT SECTIONS
 
 - In a section called CANGJIE, write the given cangjie code and its meaning.
-- In a section called WORDS, use the following mapping to convert each letter of the cangjie code into list of words ordered by the sequence of the letter: 
+- In a section called WORDS, use the following mapping to convert each letter of the cangjie code into list of words in the same order as the letter order in the code: 
 A:sun
 B:moon
 C:metal
@@ -44,6 +44,7 @@ Examples:
 
 - You only output human-readable Markdown.
 - Do not miss any alphabets.
+- Do not list the words in wrong order. Double check the order of the letter in the cangjie code and follow the order.
 - Do not output warnings or notes
 
 # INPUT:
