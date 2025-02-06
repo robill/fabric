@@ -1,5 +1,5 @@
 # Define the base directory for Obsidian notes
-obsidian_base="/path/to/obsidian"
+obsidian_base="/c/Users/uidw7283/OneDrive - Continental AG/DDrive/Project/work_notes/Work Logbook"
 
 # Loop through all files in the ~/.config/fabric/patterns directory
 for pattern_file in ~/.config/fabric/patterns/*; do
@@ -14,7 +14,7 @@ for pattern_file in ~/.config/fabric/patterns/*; do
     $pattern_name() {
         local title=\$1
         local date_stamp=\$(date +'%Y-%m-%d')
-        local output_path=\"\$obsidian_base/\${date_stamp}-\${title}.md\"
+        local output_path=\"\$obsidian_base/\${date_stamp}_\${title}.md\"
 
         # Check if a title was provided
         if [ -n \"\$title\" ]; then
@@ -27,3 +27,5 @@ for pattern_file in ~/.config/fabric/patterns/*; do
     }
     "
 done
+
+alias cbpaste='echo $(powershell.exe Get-Clipboard)'
